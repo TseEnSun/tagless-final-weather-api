@@ -1,4 +1,4 @@
-package com.seansun.weather
+package weather.services
 
 import cats.Applicative
 import cats.implicits._
