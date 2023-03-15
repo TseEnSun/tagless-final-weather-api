@@ -1,7 +1,7 @@
 package weather.http
 
-import cats.effect.Async
 import cats.syntax.all.*
+import cats.effect.{Async, Ref, Resource}
 import com.comcast.ip4s.*
 import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.ember.server.EmberServerBuilder
@@ -11,13 +11,15 @@ import weather.http.routes.WeatherRoutes
 import weather.services.cache.WeatherCache
 import weather.services.externalApi.WeatherApi
 import weather.programs.WeatherProgram
+import weather.domain.Weather
 
 object WeatherServer:
 
   def run[F[_]: Async]: F[Nothing] = {
     for {
       client <- EmberClientBuilder.default[F].build
-      weatherCache = WeatherCache.make[F]
+      inMemoryCache <- Resource.eval(Ref.of[F, Map[String, Weather]](Map.empty))
+      weatherCache = WeatherCache.make[F](inMemoryCache)
       weatherAPi = WeatherApi.make[F](client)
       weatherProgram = WeatherProgram.make[F](weatherCache, weatherAPi)
 
