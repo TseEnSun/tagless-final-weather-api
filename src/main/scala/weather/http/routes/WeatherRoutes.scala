@@ -26,9 +26,15 @@ final case class WeatherRoutes[F[_]: Sync](
 
   private val httpRoutes: HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root :? CityQueryParamMatcher(city) =>
-      weather.getCityWeather(City(city)).flatMap{ weather =>
-        Ok(weather)
-      }
+      for {
+        eitherWeather <- weather.getCityWeather(City(city))
+        resp <- eitherWeather match {
+          case Left(err) => Ok("No data right now")
+          case Right(weather) => Ok(weather)
+        }
+
+      } yield resp
+      
   }
 
   val routes: HttpRoutes[F] = Router(

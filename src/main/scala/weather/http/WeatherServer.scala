@@ -6,7 +6,10 @@ import com.comcast.ip4s.*
 import org.http4s.ember.client.EmberClientBuilder
 import org.http4s.ember.server.EmberServerBuilder
 import org.http4s.implicits.*
-import org.http4s.server.middleware.Logger
+import org.http4s.server.middleware.{Logger => MiddleWareLogger}
+import org.typelevel.log4cats.Logger
+import org.typelevel.log4cats.SelfAwareStructuredLogger
+import org.typelevel.log4cats.slf4j.Slf4jLogger
 import weather.http.routes.WeatherRoutes
 import weather.services.cache.WeatherCache
 import weather.services.externalApi.WeatherApi
@@ -15,10 +18,10 @@ import weather.domain.Weather
 
 object WeatherServer:
 
-  def run[F[_]: Async]: F[Nothing] = {
+  def run[F[_]: Async: Logger]: F[Nothing] = {
     for {
       client <- EmberClientBuilder.default[F].build
-      inMemoryCache <- Resource.eval(Ref.of[F, Map[String, Weather]](Map.empty))
+      inMemoryCache <- Resource.eval(Ref.of[F, Map[String, (Long, Weather)]](Map.empty))
       weatherCache = WeatherCache.make[F](inMemoryCache)
       weatherAPi = WeatherApi.make[F](client)
       weatherProgram = WeatherProgram.make[F](weatherCache, weatherAPi)
@@ -32,7 +35,7 @@ object WeatherServer:
       ).orNotFound
 
       // With Middlewares in place
-      finalHttpApp = Logger.httpApp(true, true)(httpApp)
+      finalHttpApp = MiddleWareLogger.httpApp(true, true)(httpApp)
 
       _ <- 
         EmberServerBuilder.default[F]
