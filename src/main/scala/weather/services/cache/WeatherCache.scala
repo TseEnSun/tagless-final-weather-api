@@ -10,12 +10,15 @@ import weather.domain.Weather
 import weather.domain.City
 
 object WeatherCache {
-  def make[F[_]: Sync](inMemoryStore: Ref[F, Map[String, (Long, Weather)]]): WeatherCacheAlgebra[F] =
+  def make[F[_]: Sync](
+    inMemoryStore: Ref[F, Map[String, (Long, Weather)]]
+  ): WeatherCacheAlgebra[F] =
     new WeatherCacheAlgebra[F] {
-      override def set(key: String, weather: Weather): F[Unit] =
+      override def set(key: String, weather: Weather): F[Unit] = {
         val currentTimestamp = Instant.now.getEpochSecond
         inMemoryStore.update(state => state + (key -> (currentTimestamp, weather)))
-
+      }
+        
       override def get(key: String): F[Option[Weather]] =
         val currentTimestamp = Instant.now.getEpochSecond
         inMemoryStore.get.map(_.get(key).flatMap { case (cacheTime, weather) => 

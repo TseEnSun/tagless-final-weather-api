@@ -32,9 +32,7 @@ final case class WeatherRoutes[F[_]: Sync](
           case Left(err) => Ok("No data right now")
           case Right(weather) => Ok(weather)
         }
-
       } yield resp
-      
   }
 
   val routes: HttpRoutes[F] = Router(

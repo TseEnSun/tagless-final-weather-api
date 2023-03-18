@@ -43,6 +43,5 @@ object WeatherApi{
         
       }
     }
-
 }
   
