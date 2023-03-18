@@ -20,6 +20,7 @@ lazy val root = (project in file("."))
       "org.typelevel"   %% "munit-cats-effect-3" % MunitCatsEffectVersion % Test,
       "ch.qos.logback"  %  "logback-classic"     % LogbackVersion,
       "org.typelevel"   %% "log4cats-slf4j"      % log4catsVersion,
+      "org.typelevel"   %% "log4cats-noop"       % log4catsVersion,
       "io.circe"        %% "circe-core"          % circeVersion,
       "io.circe"        %% "circe-generic"       % circeVersion,
       "io.circe"        %% "circe-parser"        % circeVersion,
