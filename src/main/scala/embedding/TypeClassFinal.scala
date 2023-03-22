@@ -2,6 +2,7 @@ package embedding
 
 object TypeClassFinal {
 
+  // the language (algebra)
   trait ExpSYM[repr]:
     def lit(n: Int): repr
     def neg(e: repr): repr
@@ -19,6 +20,8 @@ object TypeClassFinal {
 
   def tf1[A](using exp: ExpSYM[A]): A = exp.add(exp.lit(8), exp.neg(exp.add(exp.lit(1), exp.lit(2))))
 
+
+  // the interpreters
   def eval(in: Int): Int = identity(in)
   def view(str: String): String = identity(str)
 
