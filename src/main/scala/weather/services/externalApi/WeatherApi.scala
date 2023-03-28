@@ -23,7 +23,7 @@ object WeatherApi{
 
     implicit val weatherApiResponseEntityDecoder: EntityDecoder[F, WeatherApiResponse] = jsonOf[F, WeatherApiResponse]
     new WeatherApiAlgebra[F] {
-      val weatherApiToken = "25393e6d0e674ae0a1e54447231203"
+      val weatherApiToken = "YOUR_TOKEN"
       val baseUri = uri"https://api.weatherapi.com"
       val uriWithPath = baseUri.withPath(path"/v1/current.json")
       def get(city: City): F[Either[String, Weather]] = {
