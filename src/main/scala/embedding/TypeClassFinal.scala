@@ -8,6 +8,9 @@ object TypeClassFinal {
     def neg(e: repr): repr
     def add(e1: repr , e2: repr): repr
 
+  object ExpSYM:
+    def apply[repr](using exp: ExpSYM[repr]): ExpSYM[repr] = exp
+
   given ExpSYM[Int] with
     def lit(n: Int) = n
     def neg(e: Int) = -e
