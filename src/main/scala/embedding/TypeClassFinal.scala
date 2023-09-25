@@ -11,6 +11,8 @@ object TypeClassFinal {
   object ExpSYM:
     def apply[repr](using exp: ExpSYM[repr]): ExpSYM[repr] = exp
 
+
+  // the interpreter
   given ExpSYM[Int] with
     def lit(n: Int) = n
     def neg(e: Int) = -e
@@ -21,10 +23,15 @@ object TypeClassFinal {
     def neg(e: String) = s"(-$e)"
     def add(e1: String, e2: String) = s"($e1+$e2)" 
 
+
+  // the program
   def tf1[A](using exp: ExpSYM[A]): A = exp.add(exp.lit(8), exp.neg(exp.add(exp.lit(1), exp.lit(2))))
 
+  def tf11[A](using exp: ExpSYM[A]): A = {
+    import exp._
+    add(lit(8), neg(add(lit(1), lit(2))))
+  }
 
-  // the interpreters
   def eval(in: Int): Int = identity(in)
   def view(str: String): String = identity(str)
 

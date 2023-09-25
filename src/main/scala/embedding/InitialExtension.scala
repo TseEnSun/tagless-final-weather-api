@@ -9,6 +9,7 @@ object InitialExtension {
 
   val ti2 = Mul(OldExp(Old.Lit(7)), OldExp(Old.ti1))
   // val tim1 = OldExp(Old.Add(Old.Lit(7), (Old.Neg(Mul(OldExp(Old.Lit(1)), OldExp(Old.Lit(2)))))))
+  // Boom!
   
   def eval(exp: Exp): Int = exp match {
     case OldExp(e) => Old.eval(e)
