@@ -1,6 +1,5 @@
 package basic
 
-import java.awt.Point
 
 object Syntax {
   
